@@ -1,0 +1,177 @@
+<div class="container-fluid py-4 px-4">
+
+  <!-- Métricas resumen -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="metric-card">
+        <div class="metric-label">Total órdenes</div>
+        <div class="metric-value">{{ orders.length }}</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="metric-card metric-pending">
+        <div class="metric-label">Pendientes</div>
+        <div class="metric-value">
+          {{ orders | ordersByStatus:'PENDING' }}
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="metric-card metric-paid">
+        <div class="metric-label">Aprobadas</div>
+        <div class="metric-value">
+          {{ orders | ordersByStatus:'APPROVED' }}
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="metric-card metric-rejected">
+        <div class="metric-label">Rechazadas</div>
+        <div class="metric-value">
+          {{ orders | ordersByStatus:'REJECTED' }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h5 class="fw-bold mb-0" style="color:var(--nyu-blue)">
+        Órdenes de Pago
+      </h5>
+      <!-- Interpolation -->
+      <small class="text-muted">
+        {{ orders.length }} orden(es) encontrada(s)
+      </small>
+    </div>
+  </div>
+
+  <!-- Alerta de error -->
+  <app-alert *ngIf="errorMsg" [message]="errorMsg" type="danger">
+  </app-alert>
+
+  <!-- Filtros -->
+  <div class="nyu-card p-3 mb-4">
+    <div class="row g-3 align-items-end">
+
+      <!-- Filtro estado — Two-way Binding -->
+      <div class="col-md-4">
+        <label class="form-label fw-semibold small">Estado</label>
+        <select class="form-select"
+                [(ngModel)]="filterStatus"
+                (change)="onFilterChange()">
+          <option value="">Todos los estados</option>
+          <!-- NgFor -->
+          <option *ngFor="let s of statusOptions" [value]="s">
+            {{ s | orderStatusLabel }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Filtro servicio Admin — Two-way Binding -->
+      <div class="col-md-4" *ngIf="!isOperator">
+        <label class="form-label fw-semibold small">
+          Servicio origen
+        </label>
+        <select class="form-select"
+                [(ngModel)]="filterService"
+                (change)="onFilterChange()">
+          <option value="">Todos los servicios</option>
+          <option *ngFor="let s of serviceOptions" [value]="s">
+            {{ s }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Servicio fijo para operador -->
+      <div class="col-md-4" *ngIf="isOperator">
+        <label class="form-label fw-semibold small">Servicio</label>
+        <input type="text"
+               class="form-control"
+               [value]="userService"
+               readonly>
+      </div>
+
+      <div class="col-md-4">
+        <button class="btn btn-outline-secondary w-100"
+                (click)="clearFilters()">
+          Limpiar filtros
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Spinner -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="text-muted mt-2">Cargando órdenes...</p>
+  </div>
+
+  <!-- Tabla -->
+  <div class="nyu-card" *ngIf="!loading">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-dark">
+          <tr>
+            <th class="px-4 py-3">ID</th>
+            <th class="py-3">Referencia</th>
+            <th class="py-3">Servicio</th>
+            <th class="py-3">Monto</th>
+            <th class="py-3">Estado</th>
+            <th class="py-3">Fecha</th>
+            <th class="py-3">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- NgIf: sin órdenes -->
+          <tr *ngIf="orders.length === 0">
+            <td colspan="7" class="text-center py-5 text-muted">
+              No se encontraron órdenes.
+            </td>
+          </tr>
+
+          <!-- NgFor: itera órdenes -->
+          <tr *ngFor="let order of orders">
+            <!-- Interpolation -->
+            <td class="px-4 py-3 fw-bold text-muted small">
+              {{ order.id | slice:0:8 }}...
+            </td>
+            <td class="py-3">
+              <code class="small">{{ order.externalRef }}</code>
+            </td>
+            <td class="py-3">
+              <span class="badge bg-light text-dark border">
+                {{ order.originService }}
+              </span>
+            </td>
+            <td class="py-3 fw-semibold">
+              {{ order.amount | currencyClp }}
+            </td>
+            <td class="py-3">
+              <!-- Property Binding: clase dinámica -->
+              <span class="badge rounded-pill px-3 py-2"
+                    [class]="getBadgeClass(order.status)">
+                {{ order.status | orderStatusLabel }}
+              </span>
+            </td>
+            <td class="py-3 text-muted small">
+              {{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}
+            </td>
+            <td class="py-3">
+              <!-- Event Binding: navega al detalle usando referenceId -->
+              <a [routerLink]="['/orders', order.externalRef]"
+                 class="btn btn-sm btn-nyu px-3">
+                Ver detalle
+              </a>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

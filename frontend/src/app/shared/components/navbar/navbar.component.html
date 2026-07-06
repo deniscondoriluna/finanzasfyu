@@ -1,0 +1,56 @@
+<nav class="navbar navbar-expand-lg nyu-navbar">
+  <div class="container-fluid px-4">
+
+    <!-- Brand -->
+    <a class="navbar-brand text-white fw-bold" routerLink="/orders">
+        NYU Pagos
+    </a>
+
+    <!-- Toggle mobile -->
+    <button class="navbar-toggler" type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Links -->
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link text-white"
+             routerLink="/orders"
+             routerLinkActive="fw-bold">
+            Órdenes
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+             routerLink="/reports"
+             routerLinkActive="fw-bold">
+            Reportes
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+             routerLink="/audit"
+             routerLinkActive="fw-bold">
+            Bitácora
+          </a>
+        </li>
+      </ul>
+
+      <!-- Usuario + logout -->
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-white-50 small">
+          <!-- Interpolation: muestra nombre del usuario activo -->
+          {{ (authService.currentUser$ | async)?.name }}
+        </span>
+        <button class="btn btn-outline-light btn-sm"
+                (click)="logout()">
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+
+  </div>
+</nav>

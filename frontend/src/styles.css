@@ -1,0 +1,410 @@
+:root{
+--nyu-blue:#1B3A6B;
+--nyu-blue-med:#2E75B6;
+--nyu-blue-light:#D6E4F7;
+--nyu-success:#198754;
+--nyu-danger:#DC3545;
+--nyu-warning:#FFC107;
+--nyu-gray-bg:#F5F7FA;
+--nyu-text:#212529;
+}
+
+*{box-sizing:border-box}
+
+html,
+body{
+height:100%;
+margin:0;
+padding:0;
+}
+
+body{
+background:var(--nyu-gray-bg);
+font-family:'Segoe UI',sans-serif;
+color:var(--nyu-text);
+}
+
+/* Layout */
+
+.payment-page{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(
+135deg,
+var(--nyu-blue),
+var(--nyu-blue-med)
+);
+}
+
+.payment-wrapper{
+width:100%;
+max-width:640px;
+padding:20px;
+}
+
+.nyu-navbar{
+background:var(--nyu-blue);
+box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
+.nyu-card{
+width:100%;
+height:560px;
+padding:2rem;
+border-radius:16px;
+background:#fff;
+display:flex;
+flex-direction:column;
+gap:12px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+
+.payment-card{
+max-height:95vh;
+overflow-y:auto;
+}
+
+/* Titles */
+
+.title-nyu{
+text-align:center;
+color:var(--nyu-blue);
+font-weight:700;
+margin-bottom:5px;
+}
+
+.subtitle-nyu{
+text-align:center;
+color:#6c757d;
+margin-bottom:15px;
+}
+
+/* Forms */
+
+.form-group{
+display:flex;
+flex-direction:column;
+}
+
+.card-form,
+.transfer-form,
+.login-form{
+display:flex;
+flex-direction:column;
+gap:14px;
+}
+
+.form-label{
+font-size:13px;
+font-weight:600;
+color:var(--nyu-blue);
+margin-bottom:4px;
+}
+
+.form-control{
+width:100%;
+padding:10px;
+border:1px solid #d0d7de;
+border-radius:10px;
+transition:.2s;
+}
+
+.form-control:focus{
+border-color:var(--nyu-blue-med);
+box-shadow:0 0 0 .2rem rgba(46,117,182,.25);
+}
+
+.form-row-inline{
+display:flex;
+gap:12px;
+}
+
+.form-row-inline .expiry{
+flex:2;
+}
+
+.form-row-inline .cvv{
+flex:1;
+max-width:100px;
+}
+
+.form-row-inline .cvv .form-control{
+text-align:center;
+}
+
+/* Payment methods */
+
+.payment-methods{
+display:flex;
+gap:10px;
+width:100%;
+}
+
+.payment-btn{
+flex:1;
+min-width:110px;
+padding:10px 16px;
+border:1px solid var(--nyu-blue);
+border-radius:8px;
+background:#fff;
+color:var(--nyu-blue);
+transition:.2s;
+}
+
+.payment-btn:hover{
+background:var(--nyu-blue-light);
+transform:scale(1.02);
+}
+
+.payment-btn.active{
+background:var(--nyu-blue);
+color:#fff;
+}
+
+/* Payment box */
+
+.payment-box{
+flex:1;
+min-height:0;
+height:340px;
+padding:1.2rem;
+border-radius:12px;
+background:#fff;
+overflow-y:auto;
+overflow-x:hidden;
+box-shadow:inset 0 0 5px rgba(0,0,0,.05);
+}
+
+/* Summary */
+
+.payment-summary{
+padding:18px;
+border-radius:12px;
+margin-bottom:20px;
+background:#f8f9fa;
+}
+
+.summary-row{
+display:flex;
+justify-content:space-between;
+gap:16px;
+padding:8px 0;
+border-bottom:1px solid #e9ecef;
+}
+
+.summary-row:last-child{
+border-bottom:none;
+}
+
+.summary-row span{
+color:#6c757d;
+}
+
+.summary-row strong{
+color:#212529;
+text-align:right;
+}
+
+/* Buttons */
+
+.pay-button-container{
+display:flex;
+justify-content:center;
+margin-top:auto;
+padding-top:10px;
+}
+
+.btn-pay{
+padding:12px 40px;
+border:none;
+border-radius:30px;
+font-size:16px;
+font-weight:600;
+color:#fff;
+background:linear-gradient(
+135deg,
+var(--nyu-blue),
+var(--nyu-blue-med)
+);
+transition:.2s;
+}
+
+.btn-pay:hover{
+transform:translateY(-2px);
+box-shadow:0 6px 15px rgba(0,0,0,.2);
+}
+
+.btn-pay:disabled{
+opacity:.6;
+cursor:not-allowed;
+transform:none;
+box-shadow:none;
+}
+
+.btn-back{
+position:absolute;
+left:0;
+padding:8px 18px;
+border:1px solid var(--nyu-blue);
+border-radius:30px;
+background:#fff;
+color:var(--nyu-blue);
+font-weight:600;
+cursor:pointer;
+}
+
+.btn-back:hover{
+background:var(--nyu-blue-light);
+}
+
+/* States */
+
+.payment-success{
+border-left:6px solid var(--nyu-success);
+}
+
+.payment-error{
+border-left:6px solid var(--nyu-danger);
+}
+
+/* Loading */
+
+.payment-loading,
+.spinner-overlay{
+position:fixed;
+inset:0;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.payment-loading{
+background:rgba(0,0,0,.45);
+z-index:99999;
+}
+
+.spinner-overlay{
+background:rgba(255,255,255,.7);
+z-index:9999;
+}
+
+.loading-card{
+width:320px;
+padding:30px;
+text-align:center;
+border-radius:16px;
+background:#fff;
+box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+.loading-card h5{
+margin-top:15px;
+color:var(--nyu-blue);
+font-weight:600;
+}
+
+.loading-card p{
+color:#6c757d;
+}
+
+/* Metrics */
+
+.metric-card{
+padding:1.2rem 1.5rem;
+border-radius:10px;
+background:#fff;
+border-left:4px solid var(--nyu-blue);
+box-shadow:0 2px 12px rgba(0,0,0,.06);
+}
+
+.metric-card.metric-pending{
+border-left-color:var(--nyu-warning);
+}
+
+.metric-card.metric-paid{
+border-left-color:var(--nyu-success);
+}
+
+.metric-card.metric-rejected{
+border-left-color:var(--nyu-danger);
+}
+
+.metric-label{
+font-size:.78rem;
+color:#888;
+text-transform:uppercase;
+letter-spacing:.04em;
+}
+
+.metric-value{
+font-size:2rem;
+font-weight:700;
+line-height:1;
+color:var(--nyu-blue);
+}
+
+/* Step header */
+
+.form-header{
+position:relative;
+display:flex;
+justify-content:center;
+align-items:center;
+margin:24px 0 12px;
+}
+.badge-approved { background-color: var(--nyu-success); color: #fff; }
+
+/* ── Report tabs ── */
+.tab-btn {
+  background: #fff;
+  border: 1px solid var(--nyu-blue);
+  color: var(--nyu-blue);
+  border-radius: 8px;
+  font-weight: 500;
+}
+.tab-btn.active-tab {
+  background: var(--nyu-blue);
+  color: #fff;
+}
+
+/* ── Badges de estado ── */
+.badge-pending {
+  background-color: #FFC107 !important;
+  color: #000 !important;
+}
+.badge-paid {
+  background-color: #198754 !important;
+  color: #fff !important;
+}
+.badge-approved {
+  background-color: #198754 !important;
+  color: #fff !important;
+}
+.badge-rejected {
+  background-color: #DC3545 !important;
+  color: #fff !important;
+}
+.badge-cancelled {
+  background-color: #6c757d !important;
+  color: #fff !important;
+}
+
+/* ── Filtros compactos ── */
+.filter-compact .form-label {
+  font-size: 0.75rem;
+  margin-bottom: 3px;
+}
+.filter-compact .form-select,
+.filter-compact .form-control {
+  font-size: 0.82rem;
+  padding: 5px 10px;
+  height: 34px;
+}
+.filter-compact .btn {
+  font-size: 0.82rem;
+  padding: 5px 10px;
+  height: 34px;
+}

@@ -1,0 +1,83 @@
+<div class="login-wrapper">
+  <div class="login-card">
+
+    <!-- Header azul -->
+    <div class="login-header">
+      <div class="login-avatar"></div>
+      <h5 class="login-title">NYU Tesorería Central</h5>
+      <p class="login-subtitle">Sistema de Pagos Centralizado</p>
+    </div>
+
+    <!-- Formulario -->
+    <div class="login-body">
+
+      <!-- Alerta de error -->
+      <app-alert
+        *ngIf="errorMsg"
+        [message]="errorMsg"
+        type="danger"
+        [autoClose]="false">
+      </app-alert>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold small">
+            Correo electrónico
+          </label>
+          <input
+            type="email"
+            class="form-control"
+            [class.is-invalid]="email.invalid && email.touched"
+            formControlName="email"
+            placeholder="correo&#64;nyu.edu">
+          <div class="invalid-feedback">
+            <span *ngIf="email.errors?.['required']">
+              El correo es requerido.
+            </span>
+            <span *ngIf="email.errors?.['email']">
+              Formato de correo inválido.
+            </span>
+          </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="mb-4">
+          <label class="form-label fw-semibold small">Contraseña</label>
+          <input
+            type="password"
+            class="form-control"
+            [class.is-invalid]="password.invalid && password.touched"
+            formControlName="password"
+            placeholder="••••••••">
+          <div class="invalid-feedback">
+            <span *ngIf="password.errors?.['required']">
+              La contraseña es requerida.
+            </span>
+            <span *ngIf="password.errors?.['minlength']">
+              Mínimo 6 caracteres.
+            </span>
+          </div>
+        </div>
+
+        <!-- Botón -->
+        <button
+          type="submit"
+          class="btn btn-nyu w-100 py-2 fw-semibold"
+          [disabled]="loading">
+          <span *ngIf="loading"
+                class="spinner-border spinner-border-sm me-2">
+          </span>
+          {{ loading ? 'Ingresando...' : 'Ingresar' }}
+        </button>
+
+      </form>
+
+      <p class="login-footer">
+        NYU — Sistema de Pagos y Tesorería Central v1.0
+      </p>
+
+    </div>
+  </div>
+</div>

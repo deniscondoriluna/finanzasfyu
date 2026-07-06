@@ -1,0 +1,13 @@
+export enum PaymentStatus {
+  PENDING   = 'PENDING',
+  APPROVED  = 'APPROVED',
+  REJECTED  = 'REJECTED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum OriginService {
+  MATRICULA  = 'MATRICULA',
+  RESIDENCIA = 'RESIDENCIA',
+  CAFETERIA  = 'CAFETERIA',
+  BIBLIOTECA = 'BIBLIOTECA',
+}

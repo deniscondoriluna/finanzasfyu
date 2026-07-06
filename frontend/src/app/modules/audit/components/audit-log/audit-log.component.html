@@ -1,0 +1,229 @@
+<div class="container-fluid py-4 px-4">
+
+  <!-- Título -->
+  <div class="mb-4">
+    <h5 class="fw-bold mb-0" style="color:var(--nyu-blue)">
+      Bitácora de Transacciones
+    </h5>
+    <small class="text-muted">
+      Historial completo de órdenes y estadísticas
+    </small>
+  </div>
+
+  <!-- Error -->
+  <app-alert *ngIf="errorMsg" [message]="errorMsg" type="danger">
+  </app-alert>
+
+  <!-- Spinner -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="text-muted mt-2">Cargando bitácora...</p>
+  </div>
+
+  <ng-container *ngIf="!loading">
+
+    <!-- Estadísticas -->
+    <div class="row g-3 mb-4" *ngIf="stats">
+
+      <!-- Total recaudado -->
+      <div class="col-6 col-md-3">
+        <div class="metric-card">
+          <div class="metric-label">Total recaudado</div>
+          <div class="metric-value" style="font-size:1.4rem">
+            {{ formatCLP(stats.totalRecaudado) }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Total órdenes -->
+      <div class="col-6 col-md-3">
+        <div class="metric-card">
+          <div class="metric-label">Total órdenes</div>
+          <div class="metric-value">{{ stats.totalOrdenes }}</div>
+        </div>
+      </div>
+
+      <!-- Por estado — NgFor -->
+      <div class="col-12 col-md-6">
+        <div class="nyu-card p-3 h-100">
+          <div class="metric-label mb-2">Por estado</div>
+          <div class="d-flex flex-wrap gap-2">
+            <div *ngFor="let e of stats.porEstado"
+                 class="d-flex align-items-center gap-2">
+              <span class="badge rounded-pill px-2"
+                    [class]="getBadgeClass(e.status)">
+                {{ e.status }}
+              </span>
+              <small class="text-muted">{{ e.count }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Recaudación por servicio -->
+    <div class="nyu-card p-3 mb-4" *ngIf="stats">
+      <div class="metric-label mb-3">Recaudación por servicio</div>
+      <div class="row g-2">
+        <div class="col-md-4"
+             *ngFor="let s of stats.porServicio">
+          <div class="d-flex justify-content-between
+                      align-items-center p-2 rounded"
+               style="background:var(--nyu-gray-bg)">
+            <span class="badge bg-light text-dark border small">
+              {{ s.service }}
+            </span>
+            <div class="text-end">
+              <div class="fw-semibold small">
+                {{ formatCLP(s.total) }}
+              </div>
+              <div class="text-muted" style="font-size:11px">
+                {{ s.count }} orden(es)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="nyu-card p-3 mb-4">
+      <div class="row g-3 align-items-end">
+
+        <div class="col-md-3">
+          <label class="form-label fw-semibold small">Estado</label>
+          <select class="form-select"
+                  [(ngModel)]="filterStatus"
+                  (change)="onFilterChange()">
+            <option value="">Todos</option>
+            <option *ngFor="let s of statusOptions" [value]="s">
+              {{ s }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label fw-semibold small">Servicio</label>
+          <select class="form-select"
+                  [(ngModel)]="filterService"
+                  (change)="onFilterChange()">
+            <option value="">Todos</option>
+            <option *ngFor="let s of serviceOptions" [value]="s">
+              {{ s }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label fw-semibold small">Desde</label>
+          <input type="date" class="form-control"
+                 [(ngModel)]="filterFrom"
+                 (change)="onFilterChange()">
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label fw-semibold small">Hasta</label>
+          <input type="date" class="form-control"
+                 [(ngModel)]="filterTo"
+                 (change)="onFilterChange()">
+        </div>
+
+        <div class="col-md-2">
+          <button class="btn btn-outline-secondary w-100"
+                  (click)="clearFilters()">
+            Limpiar
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Tabla de bitácora -->
+    <div class="nyu-card">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-dark">
+            <tr>
+              <th class="px-3 py-3">Referencia</th>
+              <th class="py-3">Servicio</th>
+              <th class="py-3">Descripción</th>
+              <th class="py-3">Monto</th>
+              <th class="py-3">Método</th>
+              <th class="py-3">Estado</th>
+              <th class="py-3">Motivo rechazo</th>
+              <th class="py-3">Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <!-- Sin resultados -->
+            <tr *ngIf="filtered.length === 0">
+              <td colspan="8" class="text-center py-5 text-muted">
+                No se encontraron registros.
+              </td>
+            </tr>
+
+            <!-- NgFor: itera entradas filtradas -->
+            <tr *ngFor="let e of filtered">
+              <td class="px-3 py-3">
+                <code class="small">{{ e.referenceId }}</code>
+              </td>
+              <td class="py-3">
+                <span class="badge bg-light text-dark border">
+                  {{ e.originService }}
+                </span>
+              </td>
+              <td class="py-3 small text-muted"
+                  style="max-width:200px">
+                {{ e.description }}
+              </td>
+              <td class="py-3 fw-semibold">
+                {{ formatCLP(e.amount) }}
+              </td>
+              <td class="py-3 small">
+                {{ e.paymentMethod || '—' }}
+              </td>
+              <td class="py-3">
+                <span class="badge rounded-pill px-3 py-2"
+                      [class]="getBadgeClass(e.status)">
+                  {{ e.status }}
+                </span>
+              </td>
+              <td class="py-3 small text-danger">
+                <!-- NgIf: solo muestra si hay motivo -->
+                <span *ngIf="e.rejectionReason; else sinMotivo">
+                  {{ e.rejectionReason }}
+                </span>
+                <ng-template #sinMotivo>
+                  <span class="text-muted">—</span>
+                </ng-template>
+              </td>
+              <td class="py-3 text-muted small">
+                {{ e.createdAt | date:'dd/MM/yyyy HH:mm' }}
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Total filtrado -->
+      <div class="px-4 py-3 border-top d-flex
+                  justify-content-between align-items-center"
+           style="background:var(--nyu-gray-bg)">
+        <small class="text-muted">
+          <!-- Interpolation -->
+          Mostrando {{ filtered.length }} de
+          {{ entries.length }} registros
+        </small>
+        <small class="fw-semibold" style="color:var(--nyu-blue)">
+          Recaudado en vista: {{ formatCLP(stats?.totalRecaudado || 0) }}
+        </small>
+      </div>
+
+    </div>
+
+  </ng-container>
+
+</div>

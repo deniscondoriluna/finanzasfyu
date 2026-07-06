@@ -1,0 +1,111 @@
+<div class="container py-4 px-4">
+
+  <!-- Botón volver -->
+  <button class="btn btn-outline-secondary mb-4"
+          (click)="goBack()">
+    ← Volver a órdenes
+  </button>
+
+  <!-- Spinner -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="text-muted mt-2">Cargando orden...</p>
+  </div>
+
+  <!-- Error -->
+  <app-alert *ngIf="errorMsg" [message]="errorMsg" type="danger"></app-alert>
+
+
+  <!-- Detalle de la orden -->
+  <div class="nyu-card p-4" *ngIf="order && !loading">
+
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+      <div>
+        <!-- Interpolation -->
+        <h5 class="fw-bold mb-1" style="color:var(--nyu-blue)">
+          Orden #{{ order.id }}
+        </h5>
+        <code class="text-muted">{{ order.externalRef }}</code>
+      </div>
+      <!-- Property Binding: clase dinámica del badge -->
+      <span class="badge rounded-pill px-3 py-2 fs-6"
+            [class]="getBadgeClass(order.status)">
+        {{ order.status | orderStatusLabel }}
+      </span>
+    </div>
+
+    <hr>
+
+    <!-- Datos de la orden -->
+    <div class="row g-3">
+      <div class="col-md-6">
+        <p class="text-muted small mb-1">Servicio origen</p>
+        <p class="fw-semibold">{{ order.originService }}</p>
+      </div>
+      <div class="col-md-6">
+        <p class="text-muted small mb-1">Monto</p>
+        <p class="fw-bold fs-5" style="color:var(--nyu-blue)">
+          {{ order.amount | currencyClp }}
+        </p>
+      </div>
+      <div class="col-md-6">
+        <p class="text-muted small mb-1">Moneda</p>
+        <p class="fw-semibold">{{ order.currency }}</p>
+      </div>
+      <div class="col-md-6">
+        <p class="text-muted small mb-1">Medio de pago</p>
+        <p class="fw-semibold">
+          <!-- NgIf-else -->
+          <ng-container *ngIf="order.paymentMethod; else sinMedio">
+            {{ order.paymentMethod }}
+          </ng-container>
+          <ng-template #sinMedio>
+            <span class="text-muted">Sin asignar</span>
+          </ng-template>
+        </p>
+      </div>
+      <div class="col-12">
+        <p class="text-muted small mb-1">Descripción</p>
+        <p class="fw-semibold">{{ order.description }}</p>
+      </div>
+      <div class="col-md-6">
+        <p class="text-muted small mb-1">Fecha de creación</p>
+        <p class="fw-semibold">
+          {{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}
+        </p>
+      </div>
+      <div class="col-md-6" *ngIf="order.paidAt">
+        <p class="text-muted small mb-1">Fecha de pago</p>
+        <p class="fw-semibold">
+          {{ order.paidAt | date:'dd/MM/yyyy HH:mm' }}
+        </p>
+      </div>
+
+      <!-- Motivo de rechazo — NgIf -->
+      <div class="col-12" *ngIf="order.rejectionReason">
+        <div class="alert alert-danger mb-0">
+          <strong>Motivo de rechazo:</strong>
+          {{ order.rejectionReason }}
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Acciones -->
+    <div class="d-flex gap-3 mt-2">
+
+      <!-- NgIf: botón comprobante solo si está PAID -->
+      <button
+        *ngIf="order.status === OrderStatus.PAID"
+        class="btn btn-success px-4"
+        (click)="router.navigate(['/receipt', order.id])">
+        Ver comprobante
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

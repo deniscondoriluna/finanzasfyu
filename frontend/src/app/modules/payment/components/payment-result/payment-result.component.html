@@ -1,0 +1,115 @@
+<div class="receipt-page">
+
+  <div class="receipt-card" *ngIf="result; else noResult">
+
+    <h2 class="receipt-title">
+      Servicio de Pagos NYU
+    </h2>
+
+    <h4 class="receipt-subtitle">
+      Comprobante de Orden de Pago
+    </h4>
+
+    <div
+      class="receipt-status"
+      [ngClass]="getStatusClass(result.status)">
+      {{ getStatusLabel(result.status) }}
+    </div>
+
+    <hr>
+
+    <div class="receipt-row">
+      <span>ID de pago</span>
+      <strong>{{ result.id }}</strong>
+    </div>
+
+    <div class="receipt-row">
+      <span>Referencia</span>
+      <strong>{{ result.referenceId }}</strong>
+    </div>
+
+    <div class="receipt-row">
+      <span>Servicio origen</span>
+      <strong>{{ result.originService }}</strong>
+    </div>
+
+    <div class="receipt-row">
+      <span>Método de pago</span>
+      <strong>{{ result.paymentMethod }}</strong>
+    </div>
+
+    <div class="receipt-row">
+      <span>Monto</span>
+      <strong>
+        {{ result.amount | currency:'CLP':'symbol-narrow':'1.0-0' }}
+      </strong>
+    </div>
+
+    <div class="receipt-row">
+      <span>Descripción</span>
+      <strong>{{ result.description }}</strong>
+    </div>
+
+    <div class="receipt-row">
+      <span>Fecha creación</span>
+      <strong>
+        {{ result.createdAt | date:'dd/MM/yyyy HH:mm' }}
+      </strong>
+    </div>
+
+    <div class="receipt-row">
+      <span>Última actualización</span>
+      <strong>
+        {{ result.updatedAt | date:'dd/MM/yyyy HH:mm' }}
+      </strong>
+    </div>
+
+    <div
+      class="receipt-row"
+      *ngIf="result.rejectionReason">
+      <span>Motivo rechazo</span>
+      <strong>{{ result.rejectionReason }}</strong>
+    </div>
+
+    <hr>
+
+    <p class="receipt-message">
+      Esta orden fue registrada correctamente en el sistema de pagos NYU.
+      El estado actual de la orden es {{ getStatusLabel(result.status) }}.
+    </p>
+
+    <div class="receipt-actions">
+      <button
+        class="btn-receipt"
+        (click)="printReceipt()">
+        Descargar PDF
+      </button>
+
+      <button
+        class="btn-receipt-secondary"
+        (click)="goBack()">
+        Volver
+      </button>
+    </div>
+
+  </div>
+
+  <ng-template #noResult>
+    <div class="receipt-card text-center">
+      <h2 class="receipt-title">
+        No hay comprobante disponible
+      </h2>
+
+      <p class="receipt-message">
+        No se recibieron datos del pago. Vuelve al formulario e intenta nuevamente.
+      </p>
+
+      <button
+        class="btn-receipt-secondary"
+        (click)="goBack()">
+        Volver al pago
+      </button>
+    </div>
+  </ng-template>
+
+</div>

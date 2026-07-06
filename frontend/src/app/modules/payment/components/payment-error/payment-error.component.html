@@ -1,0 +1,53 @@
+<div class="error-page">
+
+  <div class="error-card">
+
+    <div class="error-icon">
+      ❌
+    </div>
+
+    <h2 class="error-title">
+      Pago no procesado
+    </h2>
+
+    <p class="error-message">
+      {{ error.message }}
+    </p>
+
+    <div class="error-details">
+
+      <div class="detail-row">
+        <span>Código:</span>
+        <strong>{{ error.status }}</strong>
+      </div>
+
+      <div class="detail-row">
+        <span>Detalle:</span>
+        <strong>{{ error.detail }}</strong>
+      </div>
+
+    </div>
+
+    <div class="error-actions">
+
+      <button
+        class="btn-primary"
+        (click)="retry()">
+
+        Intentar nuevamente
+
+      </button>
+
+      <button
+        class="btn-secondary"
+        (click)="goHome()">
+
+        Volver al inicio
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,153 @@
+<div class="container-fluid py-4 px-4">
+
+  <!-- Header -->
+  <div class="mb-4">
+    <h5 class="fw-bold mb-0" style="color:var(--nyu-blue)">
+      Reportes de Recaudación
+    </h5>
+    <small class="text-muted">Análisis financiero por rango de fechas</small>
+  </div>
+
+  <!-- Tabs -->
+  <div class="mb-4 d-flex gap-2">
+    <a routerLink="/reports/service" class="btn btn-sm tab-btn">
+       Por Servicio
+    </a>
+    <a routerLink="/reports/date" class="btn btn-sm tab-btn active-tab">
+       Por Fechas
+    </a>
+  </div>
+
+  <!-- Filtros -->
+  <div class="nyu-card px-3 pt-3 pb-2 mb-4">
+    <div class="d-flex flex-wrap gap-2 align-items-end">
+
+      <div style="min-width:160px; flex:1">
+        <label class="form-label fw-semibold small mb-1">Servicio</label>
+        <select class="form-select form-select-sm"
+                [(ngModel)]="filterService"
+                (change)="onFilterChange()">
+          <option value="">Todos los servicios</option>
+          <option value="MATRICULA">MATRICULA</option>
+          <option value="BIBLIOTECA">BIBLIOTECA</option>
+          <option value="CAFETERIA">CAFETERIA</option>
+          <option value="ALOJAMIENTO">ALOJAMIENTO</option>
+        </select>
+      </div>
+
+      <div style="min-width:140px; flex:1">
+        <label class="form-label fw-semibold small mb-1">Desde</label>
+        <input type="date" class="form-control form-control-sm"
+               [(ngModel)]="filterFrom"
+               (change)="onFilterChange()">
+      </div>
+
+      <div style="min-width:140px; flex:1">
+        <label class="form-label fw-semibold small mb-1">Hasta</label>
+        <input type="date" class="form-control form-control-sm"
+               [(ngModel)]="filterTo"
+               (change)="onFilterChange()">
+      </div>
+
+      <div>
+        <button class="btn btn-outline-secondary btn-sm"
+                (click)="clearFilters()">
+          Limpiar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Error -->
+  <app-alert *ngIf="errorMsg" [message]="errorMsg" type="danger">
+  </app-alert>
+
+  <!-- Spinner -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="text-muted mt-2">Cargando reporte...</p>
+  </div>
+
+  <ng-container *ngIf="!loading">
+
+    <!-- Métricas -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <div class="metric-card metric-paid">
+          <div class="metric-label">Total recaudado</div>
+          <div class="metric-value" style="font-size:1.4rem">
+            {{ formatCLP(totalRecaudado) }}
+          </div>
+          <small class="text-muted" *ngIf="filterService">
+            Servicio: {{ filterService }}
+          </small>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="metric-card">
+          <div class="metric-label">Total órdenes en período</div>
+          <div class="metric-value">{{ totalOrdenes }}</div>
+          <small class="text-muted" *ngIf="filterFrom || filterTo">
+            {{ filterFrom || '...' }} → {{ filterTo || '...' }}
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfica -->
+    <div class="nyu-card p-4 mb-4">
+      <canvas #chartCanvas style="max-height:350px"></canvas>
+    </div>
+
+    <!-- Tabla -->
+    <div class="nyu-card">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-dark">
+            <tr>
+              <th class="px-4 py-3">Fecha</th>
+              <th class="py-3">Total recaudado</th>
+              <th class="py-3">N° Órdenes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="data.length === 0">
+              <td colspan="3" class="text-center py-5 text-muted">
+                No hay datos para el período seleccionado.
+              </td>
+            </tr>
+            <tr *ngFor="let d of data">
+              <td class="px-4 py-3 fw-semibold">
+                {{ d.date | date:'dd/MM/yyyy' }}
+              </td>
+              <td class="py-3 fw-bold" style="color:var(--nyu-blue)">
+                <span *ngIf="d.total > 0; else sinRecaudacion">
+                  {{ formatCLP(d.total) }}
+                </span>
+                <ng-template #sinRecaudacion>
+                  <span class="text-muted">$0</span>
+                </ng-template>
+              </td>
+              <td class="py-3">{{ d.count }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer -->
+      <div class="px-4 py-3 border-top d-flex
+                  justify-content-between align-items-center"
+           style="background:var(--nyu-gray-bg)">
+        <small class="text-muted">
+          {{ data.length }} día(s) con movimientos
+        </small>
+        <small class="fw-semibold" style="color:var(--nyu-blue)">
+          Total: {{ formatCLP(totalRecaudado) }}
+        </small>
+      </div>
+    </div>
+
+  </ng-container>
+
+</div>

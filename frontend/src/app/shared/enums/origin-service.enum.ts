@@ -1,0 +1,8 @@
+export enum OriginService {
+  MATRICULA   = 'MATRICULA',
+  BIBLIOTECA  = 'BIBLIOTECA',
+  CAFETERIA   = 'CAFETERIA',
+  LABORATORIO = 'LABORATORIO',
+  DEPORTES    = 'DEPORTES',
+  OTRO        = 'OTRO'
+}

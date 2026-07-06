@@ -1,0 +1,63 @@
+<div class="nyu-sidebar d-flex flex-column">
+
+  <!-- Logo -->
+  <div class="sidebar-brand px-4 py-4">
+    <div class="d-flex align-items-center gap-2">
+      <div class="sidebar-icon"></div>
+      <div>
+        <div class="sidebar-title">NYU Pagos</div>
+        <div class="sidebar-subtitle">Tesorería Central</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sidebar-divider">
+
+  <!-- Usuario activo -->
+  <div class="px-4 py-2 mb-2">
+    <div class="sidebar-user-label">Conectado como</div>
+    <div class="sidebar-user-name">
+      {{ (authService.currentUser$ | async)?.name }}
+    </div>
+    <div class="sidebar-user-role">
+      {{ (authService.currentUser$ | async)?.role }}
+    </div>
+  </div>
+
+  <hr class="sidebar-divider">
+
+  <!-- Navegación -->
+  <nav class="flex-grow-1 px-3 py-2">
+    <div class="sidebar-section-label px-2 mb-1">MENÚ PRINCIPAL</div>
+
+    <a routerLink="/orders"
+       routerLinkActive="active"
+       class="sidebar-link">
+      <span class="sidebar-link-icon"></span>
+      Órdenes de Pago
+    </a>
+
+    <a routerLink="/reports"
+       routerLinkActive="active"
+       class="sidebar-link">
+      <span class="sidebar-link-icon"></span>
+      Reportes
+    </a>
+
+    <a routerLink="/audit"
+       routerLinkActive="active"
+       class="sidebar-link">
+      <span class="sidebar-link-icon"></span>
+      Bitácora
+    </a>
+
+  </nav>
+
+  <!-- Logout -->
+  <div class="px-3 py-3">
+    <button class="btn w-100 sidebar-logout" (click)="logout()">
+      Cerrar sesión
+    </button>
+  </div>
+
+</div>

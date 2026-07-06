@@ -1,0 +1,131 @@
+.receipt-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1B3A6B, #2E75B6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.receipt-card {
+  width: 100%;
+  max-width: 760px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+
+.receipt-title {
+  text-align: center;
+  color: #1B3A6B;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.receipt-subtitle {
+  text-align: center;
+  color: #6c757d;
+  margin-bottom: 24px;
+}
+
+.receipt-status {
+  text-align: center;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.status-paid {
+  background: #198754;
+  color: #ffffff;
+}
+
+.status-pending {
+  background: #ffc107;
+  color: #212529;
+}
+
+.status-rejected {
+  background: #dc3545;
+  color: #ffffff;
+}
+
+.status-cancelled {
+  background: #6c757d;
+  color: #ffffff;
+}
+
+.status-default {
+  background: #d6e4f7;
+  color: #1B3A6B;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.receipt-row span {
+  color: #6c757d;
+}
+
+.receipt-row strong {
+  color: #212529;
+  text-align: right;
+  word-break: break-word;
+}
+
+.receipt-message {
+  text-align: center;
+  margin-top: 22px;
+  color: #6c757d;
+}
+
+.receipt-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.btn-receipt {
+  border: none;
+  background: #1B3A6B;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.btn-receipt-secondary {
+  border: 1px solid #1B3A6B;
+  background: white;
+  color: #1B3A6B;
+  padding: 12px 30px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+@media print {
+  .receipt-page {
+    background: white;
+    padding: 0;
+  }
+
+  .receipt-card {
+    box-shadow: none;
+    border-radius: 0;
+    max-width: 100%;
+  }
+
+  .receipt-actions {
+    display: none;
+  }
+}
